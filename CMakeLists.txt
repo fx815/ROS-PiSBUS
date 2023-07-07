@@ -9,7 +9,7 @@ project(ROS-PiSBUS)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
-  joy
+  sensor_msgs
   roscpp
 )
 
@@ -105,8 +105,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES ROS-PiSBUS
- CATKIN_DEPENDS joy roscpp
- DEPENDS system_lib
+ CATKIN_DEPENDS sensor_msgs roscpp
+#  DEPENDS system_lib
 )
 
 ###########
@@ -122,8 +122,12 @@ include_directories(
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
+  STATIC
   src/${PROJECT_NAME}/SBUS.cpp
+  include/${PROJECT_NAME}/SBUS.h
 )
+
+add_definitions(-D__RASPBERRYPI_ZERO_W__)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
