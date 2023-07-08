@@ -7,14 +7,14 @@ uint16_t channels[16];
 
 void ppm_callback(const serial_cppm_array::PWM8 &msg)
 {
-    RC_in[0] = msg.pwm[0];
-    RC_in[1] = msg.pwm[1];
-    RC_in[2] = msg.pwm[2];
-    RC_in[3] = msg.pwm[3];
-    RC_in[4] = msg.pwm[4];
-    RC_in[5] = msg.pwm[5];
-    RC_in[6] = msg.pwm[6];
-    RC_in[7] = msg.pwm[7];
+    RC_in[0] = 2* (msg.pwm[0] - 1000);
+    RC_in[1] = 2* (msg.pwm[1] - 1000);
+    RC_in[2] = 2* (msg.pwm[2] - 1000);
+    RC_in[3] = 2* (msg.pwm[3] - 1000);
+    RC_in[4] = 2* (msg.pwm[4] - 1000);
+    RC_in[5] = 2* (msg.pwm[5] - 1000);
+    RC_in[6] = 2* (msg.pwm[6] - 1000);
+    RC_in[7] = 2* (msg.pwm[7] - 1000);
 }
 
 int main(int argc, char **argv)
