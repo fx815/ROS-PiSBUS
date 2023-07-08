@@ -8,8 +8,8 @@ project(ROS-PiSBUS)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  cmake_modules
   sensor_msgs
+  serial_cppm_array
   roscpp
 )
 
