@@ -2,26 +2,25 @@
 #include "ROS-PiSBUS/SBUS.h"
 #include "serial_cppm_array/PWM8.h"
 
-uint16_t RC_in[8] = {};
-uint16_t channels[16];
+uint16_t RC_in[7] = {1000,1000,1000,1000,1000,1000,1000};
+float channels[16] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 void ppm_callback(const serial_cppm_array::PWM8 &msg)
 {
-    RC_in[0] = 2* (msg.pwm[0] - 1000);
-    RC_in[1] = 2* (msg.pwm[1] - 1000);
-    RC_in[2] = 2* (msg.pwm[2] - 1000);
-    RC_in[3] = 2* (msg.pwm[3] - 1000);
-    RC_in[4] = 2* (msg.pwm[4] - 1000);
-    RC_in[5] = 2* (msg.pwm[5] - 1000);
-    RC_in[6] = 2* (msg.pwm[6] - 1000);
-    RC_in[7] = 2* (msg.pwm[7] - 1000);
+    RC_in[0] = msg.pwm[0];
+    RC_in[1] = msg.pwm[1];
+    RC_in[2] = msg.pwm[2];
+    RC_in[3] = msg.pwm[3];
+    RC_in[4] = msg.pwm[4];
+    RC_in[5] = msg.pwm[5];
+    RC_in[6] = msg.pwm[6];
 }
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "ppm_sbus_covnerter");
     ros::NodeHandle n;
-    ros::Rate loop_rate(100);
+    ros::Rate loop_rate(111);
 
     SBUS::SBUS virtual_t("/dev/ttyAMA0");
     virtual_t.begin();
@@ -30,10 +29,14 @@ int main(int argc, char **argv)
 
     while (ros::ok())
     {
-        for (int i = 0; i < 8; i++){
-            channels[i] = RC_in[i];
+        for (int i = 0; i < 16; i++){
+            if (i<7){
+                channels[i] = -1.0 + 2 * ((float(RC_in[i]) - 1000.0)/1000.0);}
+            else{
+                channels[i] = -1;
+            }
         }
-        virtual_t.write(channels);
+        virtual_t.writeCal(&channels[0]);
         ros::spinOnce();
         loop_rate.sleep();
     }
